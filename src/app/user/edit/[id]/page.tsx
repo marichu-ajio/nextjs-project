@@ -19,7 +19,6 @@ export default function EditUser({ params }: { params: { id: number } }) {
     const { data: user, error, isLoading } = useSWR<User>(`/api/user/${params.id}`, fetcher);
 
     useEffect(() => {
-        console.log("user ", params, fetcher)
         if (user) {
             setName(user.name);
         }

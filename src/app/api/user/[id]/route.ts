@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '../../../_lib/prisma';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-    console.log("get params ")
     const id = params.id;
 
     if (!id) {

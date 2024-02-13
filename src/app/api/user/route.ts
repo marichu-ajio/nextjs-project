@@ -4,7 +4,6 @@ import prisma from '../../_lib/prisma';
 
 // GET endpoint
 export async function GET() {
-    console.log("user 1 ")
     // Fetch users
     const users = await prisma.user.findMany();
 
