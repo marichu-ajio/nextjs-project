@@ -1,95 +1,78 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import Link from 'next/link';
+import useSWR from 'swr';
+import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+
+interface User {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function Home() {
+  const { data: users, error, isLoading } = useSWR<User[]>(
+      '/api/user',
+      (url: string) => fetch(url)
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return res.json();
+          }),
+      {
+        onError: (error) => {
+          console.error('Error fetching data:', error);
+        },
+      }
+  );
+  const handleDelete = (id: number) => {
+    // Implement your delete logic here
+  };
+
+  // if (error) return <div>failed to load</div>;
+  // if (isLoading) return <div>loading...</div>;
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <Container>
+        <h1 className='text-3xl text-blue-500 text-center pt-10 font-bold underline'>List Users</h1>
+        <Link href="/user/create" className='text-xl text-blue-500 text-center p-1 font-bold underline'>Create User</Link>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Created At</TableCell>
+                <TableCell>Updated At</TableCell>
+                <TableCell>Modify</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users?.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.id}</TableCell>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.created_at}</TableCell>
+                    <TableCell>{user.updated_at}</TableCell>
+                    <TableCell>
+                      <Link href={`user/edit/${user.id}`}>
+                        <Button variant="contained" color="warning">
+                          Edit
+                        </Button>
+                      </Link>
+                        <Link href={`user/delete/${user.id}`}>
+                            <Button variant="contained" color="error">
+                                Delete
+                            </Button>
+                        </Link>
+                      {/* Additional modify actions */}
+                    </TableCell>
+                  </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
   );
 }
