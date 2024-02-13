@@ -36,7 +36,11 @@ export default function Home() {
   return (
       <Container>
         <h1 className='text-3xl text-blue-500 text-center pt-10 font-bold underline'>List Users</h1>
-        <Link href="/user/create" className='text-xl text-blue-500 text-center p-1 font-bold underline'>Create User</Link>
+        <Link href="/user/create" className='text-xl text-blue-500 text-center p-1 font-bold underline'>
+            <Button variant="contained" color="warning">
+                Create User
+            </Button>
+        </Link>
         <TableContainer>
           <Table>
             <TableHead>
