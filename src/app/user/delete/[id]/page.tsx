@@ -3,6 +3,7 @@ import React from 'react';
 import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
 import { Button, Container, Typography, Paper } from '@mui/material';
+import { useDeleteUser } from '@/app/hooks/userHooks';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -16,22 +17,12 @@ interface User {
 export default function DeleteUser({ params }: { params: { id: number } }) {
     const router = useRouter();
     const { data: user, error, isLoading } = useSWR<User>(`/api/user/${params.id}`, fetcher);
-
-    const deleteUser = (id: number) => {
-        fetch(`/api/user/${id}`, {
-            method: 'DELETE',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success > 0) {
-                    alert(data.message);
-                    router.push('/');
-                }
-            });
-    };
+    const { deleteUser, isLoading: deleteLoading } = useDeleteUser(params.id, {
+        onSuccess: () => router.push('/'),
+    });
 
     if (error) return <div>Failed to load</div>;
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading || deleteLoading) return <div>Loading...</div>;
 
     return (
         <Container maxWidth="md">
@@ -51,7 +42,7 @@ export default function DeleteUser({ params }: { params: { id: number } }) {
                 <Typography variant="body1" component="div" gutterBottom>
                     Updated At: {user?.updated_at}
                 </Typography>
-                <Button variant="contained" color="secondary" onClick={() => deleteUser(params.id)}>
+                <Button variant="contained" color="secondary" onClick={deleteUser}>
                     Remove User
                 </Button>
             </Paper>

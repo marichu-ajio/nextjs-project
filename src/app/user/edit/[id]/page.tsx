@@ -1,8 +1,8 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+import { Button, CircularProgress, Container, Paper, TextField, Typography } from '@mui/material';
 import useSWR from 'swr';
-import { TextField, Button, Container, Typography, Paper, CircularProgress } from '@mui/material';
+import { useSaveEditUserData } from '@/app/hooks/userHooks';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -14,38 +14,27 @@ interface User {
 }
 
 export default function EditUser({ params }: { params: { id: number } }) {
-    const router = useRouter();
-    const [name, setName] = useState('');
     const { data: user, error, isLoading } = useSWR<User>(`/api/user/${params.id}`, fetcher);
+    const { name, setName, isLoading: saveEditLoading, saveEditUserData } = useSaveEditUserData(params.id);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (user) {
             setName(user.name);
         }
-    }, [user]);
+    }, [user, setName]);
 
-    const saveData = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (name !== '') {
-            const data = {
-                name: name,
-            };
 
-            fetch(`/api/user/${params.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success > 0) {
-                        alert(data.message);
-                        router.push('/');
-                    }
-                });
-        }
+        saveEditUserData({
+            onSuccess: () => {
+                // Any additional logic on success
+            },
+            onError: (errorMsg) => {
+                // Handle error if needed
+                console.error(errorMsg);
+            },
+        });
     };
 
     if (error) {
@@ -80,7 +69,7 @@ export default function EditUser({ params }: { params: { id: number } }) {
                 <Typography variant="h3" component="div" gutterBottom>
                     Edit User
                 </Typography>
-                <form onSubmit={saveData}>
+                <form onSubmit={handleSubmit}>
                     <TextField
                         label="Name"
                         variant="outlined"
@@ -89,8 +78,8 @@ export default function EditUser({ params }: { params: { id: number } }) {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
-                        Submit
+                    <Button type="submit" variant="contained" color="primary" fullWidth disabled={saveEditLoading}>
+                        {saveEditLoading ? 'Submitting...' : 'Submit'}
                     </Button>
                 </form>
             </Paper>

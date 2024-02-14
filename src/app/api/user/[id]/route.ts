@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import prisma from '../../../_lib/prisma';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, {params}: { params: { id: string } }) {
     const id = params.id;
 
     if (!id) {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json(user);
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, {params}: { params: { id: string } }) {
     const id = params.id;
 
     if (!id) {
@@ -26,24 +26,23 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const user = await prisma.user.findUnique({
         where: {
-            id: parseInt(id, 10), // Parse as a decimal number
+            id: parseInt(id),
         },
     });
 
-    const { name } = await request.json();
+    const {name} = await request.json();
     const updatedUser = await prisma.user.update({
         where: {
-            id: parseInt(id, 10), // Parse as a decimal number
-        },
-        data: {
+            id: parseInt(id),
+        }, data: {
             name: name,
         },
     });
 
-    return NextResponse.json({ success: 1, user: updatedUser, message: "Update success" });
+    return NextResponse.json({success: 1, user: updatedUser, message: "Update success"});
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, {params}: { params: { id: string } }) {
     const id = params.id;
 
     if (!id) {
@@ -52,9 +51,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     const deleteUser = await prisma.user.delete({
         where: {
-            id: parseInt(id, 10), // Parse as a decimal number
+            id: parseInt(id),
         },
     });
 
-    return NextResponse.json({ success: 1, message: "Delete success" });
+    return NextResponse.json({success: 1, message: "Delete success"});
 }

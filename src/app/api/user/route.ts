@@ -27,3 +27,5 @@ export async function POST(request: NextRequest) {
     // Return success JSON response
     return NextResponse.json({ "success": 1, "message": "create success", "user": newUser });
 }
+
+
