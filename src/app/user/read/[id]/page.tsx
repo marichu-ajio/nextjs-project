@@ -1,10 +1,10 @@
 'use client'
 import React from 'react';
-import { CircularProgress, Container, Paper, Typography } from '@mui/material';
-import { useFetchUser } from '@/app/hooks/userHooks';
+import {CircularProgress, Container, Paper, Typography} from '@mui/material';
+import {useFetchUser} from '@/app/hooks/userHooks';
 
-export default function ReadPage({ params }: { params: { id: number } }) {
-    const { user, error, isLoading } = useFetchUser(params.id);
+export default function ReadPage({params}: { params: { id: number } }) {
+    const {user, error, isLoading} = useFetchUser(params.id);
 
     if (error) return <div>Error loading user data</div>;
 
@@ -16,7 +16,7 @@ export default function ReadPage({ params }: { params: { id: number } }) {
                 </Typography>
 
                 {isLoading ? (
-                    <CircularProgress />
+                    <CircularProgress/>
                 ) : (
                     <div>
                         <Typography variant="h5" component="p" className="mb-2">

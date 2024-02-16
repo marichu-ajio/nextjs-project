@@ -35,11 +35,15 @@ export function useUsers() {
 }
 
 export function useFetchUser(id: number) {
+    // const {data: user, error, isLoading} = useSWR<User>(
+    //     `/api/user/${id}`,
+    //     (url: string) => fetch(url).then((res) => res.json())
+    // );
+
     const {data: user, error, isLoading} = useSWR<User>(
         `/api/user/${id}`,
         (url: string) => fetch(url).then((res) => res.json())
     );
-
     return {
         user,
         error,
@@ -103,6 +107,7 @@ export function useSaveUser() {
 }
 
 interface SaveEditUserOptions {
+    name: string;
     onSuccess?: () => void;
     onError?: (error: string) => void;
 }
@@ -113,12 +118,13 @@ export function useSaveEditUserData(userId: number) {
     const [isLoading, setIsLoading] = useState(false);
 
     const saveEditUserData = async (options?: SaveEditUserOptions) => {
+        console.log("save edit user ", options, userId)
         try {
             setIsLoading(true);
 
-            if (name !== '') {
+            if (options?.name !== '') {
                 const data = {
-                    name: name,
+                    name: options?.name,
                 };
 
                 const response = await fetch(`/api/user/${userId}`, {
@@ -128,7 +134,7 @@ export function useSaveEditUserData(userId: number) {
                 });
 
                 const responseData = await response.json();
-
+                console.log("response ", responseData)
                 setIsLoading(false);
 
                 if (responseData.success > 0) {
@@ -162,6 +168,7 @@ interface DeleteUserOptions {
     onSuccess?: () => void;
     onError?: (error: string) => void;
 }
+
 export function useDeleteUser(id: number, options?: DeleteUserOptions) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -200,9 +207,7 @@ export function useDeleteUser(id: number, options?: DeleteUserOptions) {
     };
 
     return {
-        deleteUser, isLoading,
+        deleteUser,
+        isLoading,
     };
 }
-
-
-// ... (existing code for useSaveEditUserData, useDeleteUser, etc.)
