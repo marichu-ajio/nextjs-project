@@ -118,7 +118,6 @@ export function useSaveEditUserData(userId: number) {
     const [isLoading, setIsLoading] = useState(false);
 
     const saveEditUserData = async (options?: SaveEditUserOptions) => {
-        console.log("save edit user ", options, userId)
         try {
             setIsLoading(true);
 
@@ -134,7 +133,6 @@ export function useSaveEditUserData(userId: number) {
                 });
 
                 const responseData = await response.json();
-                console.log("response ", responseData)
                 setIsLoading(false);
 
                 if (responseData.success > 0) {
