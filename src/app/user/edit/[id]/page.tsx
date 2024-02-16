@@ -31,7 +31,6 @@ export default function EditUser({params}: { params: { id: number } }) {
     }, [user, setValue]);
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
-        console.log("onSubmit ", data)
         saveEditUserData({
             name: data.name,
             onSuccess: () => {
