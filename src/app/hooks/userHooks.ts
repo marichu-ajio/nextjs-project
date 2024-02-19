@@ -10,7 +10,7 @@ export interface User {
     updated_at: string;
 }
 
-export function useUsers() {
+export function useGetAllUser() {
     const {data: users, error, isLoading} = useSWR<User[]>(
         '/api/user',
         (url: string) =>
@@ -132,6 +132,7 @@ export function useSaveEditUserData(userId: number) {
                     }, body: JSON.stringify(data),
                 });
 
+                console.log("response ", response)
                 const responseData = await response.json();
                 setIsLoading(false);
 
