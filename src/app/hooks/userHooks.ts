@@ -35,11 +35,6 @@ export function useGetAllUser() {
 }
 
 export function useFetchUser(id: number) {
-    // const {data: user, error, isLoading} = useSWR<User>(
-    //     `/api/user/${id}`,
-    //     (url: string) => fetch(url).then((res) => res.json())
-    // );
-
     const {data: user, error, isLoading} = useSWR<User>(
         `/api/user/${id}`,
         (url: string) => fetch(url).then((res) => res.json())
